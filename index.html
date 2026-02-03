@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Choice 🤨</title>
+
+  <style>
+    :root {
+      --bg: #f7f9ff;
+      --card: #ffffff;
+      --text: #1f2937;
+      --blue: #4f46e5;
+      --blue-dark: #4338ca;
+      --shadow: 0 18px 40px rgba(0,0,0,.12);
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top, #e0e7ff, var(--bg));
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .card {
+      width: min(600px, 94vw);
+      background: var(--card);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 24px 20px 30px;
+      text-align: center;
+    }
+
+    .gif {
+      width: min(340px, 80vw);
+      border-radius: 16px;
+      margin: 8px auto 16px;
+      display: block;
+    }
+
+    h1 {
+      margin: 8px 0 18px;
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .buttons {
+      height: 110px;
+      position: relative;
+      margin-top: 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      white-space: nowrap;
+    }
+
+    #yesBtn {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 10px 18px rgba(79, 70, 229, .25);
+    }
+
+    #yesBtn:hover {
+      background: var(--blue-dark);
+    }
+
+    #noBtn {
+      position: absolute;
+      left: 55%;
+      top: 18px;
+      background: #eef2ff;
+      color: #1e1b4b;
+    }
+
+    /* CHAOS ANIMATIONS */
+    @keyframes flip {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(180deg); }
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-4px); }
+      100% { transform: translateX(0); }
+    }
+
+    .flip {
+      animation: flip 0.35s ease forwards;
+    }
+
+    .shake {
+      animation: shake 0.3s ease;
+    }
+
+    .result {
+      display: none;
+      margin-top: 18px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      line-height: 1.4;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <!-- OPTIONAL: keep or remove the gif -->
+    <img class="gif" src="gif.gif" alt="reaction gif">
+
+    <h1>Which path should I choose? 🤔</h1>
+
+    <div class="buttons" id="playArea">
+      <button id="yesBtn">Rotating Internship + Residency</button>
+      <button id="noBtn">MedVet</button>
+    </div>
+
+    <div class="result" id="result">
+      Excellent choice 😌<br>
+      Character development unlocked.
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const playArea = document.getElementById("playArea");
+    const result = document.getElementById("result");
+
+    let flipped = false;
+
+    function moveNoButton() {
+      const area = playArea.getBoundingClientRect();
+      const btn = noBtn.getBoundingClientRect();
+
+      const maxX = area.width - btn.width;
+      const maxY = area.height - btn.height;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      // teleport
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+
+      // flip every other time
+      if (!flipped) {
+        noBtn.classList.add("flip");
+        flipped = true;
+      } else {
+        noBtn.classList.remove("flip");
+        flipped = false;
+      }
+
+      // shake
+      noBtn.classList.remove("shake");
+      void noBtn.offsetWidth;
+      noBtn.classList.add("shake");
+
+      // taunting text
+      const phrases = [
+        "Absolutely not",
+        "Be serious",
+        "Nice try",
+        "No ❤️",
+        "💀"
+      ];
+      noBtn.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    }
+
+    // Desktop
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("mousemove", moveNoButton);
+
+    // Mobile
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      moveNoButton();
+    }, { passive: false });
+
+    yesBtn.addEventListener("click", () => {
+      result.style.display = "block";
+      noBtn.style.display = "none";
+      yesBtn.textContent = "Chosen ✔️";
+      yesBtn.disabled = true;
+    });
+
+    // initial chaos
+    moveNoButton();
+  </script>
+</body>
+</html>
